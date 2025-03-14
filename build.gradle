@@ -2,9 +2,17 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.3'
     id 'io.spring.dependency-management' version '1.1.7'
+
+    // Code Quality Plugins
+    id 'com.diffplug.spotless' version '7.0.2' // Formatter
+    id 'checkstyle' // Style Enforcement
+    id 'pmd' // Code Smell Detection
+    id 'com.github.spotbugs' version '6.1.7' // Bug Detection
+
+    id 'com.google.cloud.tools.jib' version '3.4.4'
 }
 
-group = 'com.example.authservice'
+group = 'com.daryllmoya.projectxyz'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -24,6 +32,8 @@ repositories {
 }
 
 dependencies {
+    checkstyle "com.puppycrawl.tools:checkstyle:10.21.4"
+
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -42,6 +52,53 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+        target 'src/**/*.java'
+    }
+}
+
+checkstyle {
+    configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
+    sourceSets = [sourceSets.main]
+}
+
+pmd {
+    ruleSets = ["rulesets/java/quickstart.xml"]
+}
+
+import com.github.spotbugs.snom.Confidence
+import com.github.spotbugs.snom.Effort
+spotbugs {
+    ignoreFailures = false
+    showStackTraces = true
+    showProgress = true
+    effort = Effort.valueOf('DEFAULT')
+    reportLevel = Confidence.valueOf('DEFAULT')
+    reportsDir = file("$buildDir/spotbugs")
+}
+
+jib {
+    from {
+        image = "eclipse-temurin:21-jre"
+    }
+    to {
+        image = "gcr.io/daryllmoya.projectxyz/authservice"
+        tags = ["latest", project.version]
+    }
+    container {
+        jvmFlags = ["-Xms512m", "-Xmx1024m"]
+        ports = ["8080"]
+        environment = [SPRING_PROFILES_ACTIVE: "prod"]
+        mainClass = "com.daryllmoya.projectxyz.AuthServiceApplication"
+    }
+}
+
+tasks.named("jib").configure {
+    dependsOn("check")
 }
 
 tasks.named('test') {
