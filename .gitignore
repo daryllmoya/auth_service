@@ -1,0 +1,84 @@
+# Gradle-related files
+.gradle/
+build/
+bin/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### **Spring Tool Suite (STS) & Eclipse** ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+### **IntelliJ IDEA** ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### **NetBeans** ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### **VS Code** ###
+.vscode/
+
+### **OS-specific files** ###
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*.swp
+*.swo
+.svn/
+cvs/
+
+### **Java-related** ###
+# Ignore compiled Java classes & artifacts
+*.class
+*.war
+*.jar
+*.ear
+
+# Logs & temporary files
+logs/
+*.log
+log/
+nohup.out
+
+### **Application Properties** ###
+application.properties
+application-*.properties
+application.yml
+application-*.yml
+
+### **Database & Migration Files** ###
+*.db
+*.sqlite
+flyway_schema_history
+.liquibase.lock
+
+### **Test Coverage Reports** ###
+/coverage/
+*.lcov
